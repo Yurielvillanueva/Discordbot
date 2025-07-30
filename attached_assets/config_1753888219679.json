@@ -1,0 +1,17 @@
+{
+    "prefix": "!",
+    "botName": "Orbit",
+    "version": "1.0.0",
+    "colors": {
+        "primary": "#7289DA",
+        "success": "#00FF00",
+        "error": "#FF0000",
+        "warning": "#FFA500",
+        "info": "#00BFFF"
+    },
+    "cooldowns": {
+        "default": 3000,
+        "temprole": 5000,
+        "confess": 10000
+    }
+}
