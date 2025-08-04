@@ -15,8 +15,7 @@ const animeList = [
     { title: "Made in Abyss", genre: "adventure, fantasy, dark", comment: "Cute visuals, terrifying depth." },
     { title: "Kaguya-sama: Love is War", genre: "romance, comedy, psychological", comment: "Love is a battlefield — and hilarious!" },
     { title: "Oshi no Ko", genre: "drama, mystery, psychological", comment: "Idol life gets dark, fast." },
-    { title: "Spy x Family", genre: "action, comedy, slice of life", comment: "Secret agents and wholesome chaos." },
-    // Add more anime entries here...
+    { title: "Spy x Family", genre: "action, comedy, slice of life", comment: "Secret agents and wholesome chaos." }
 ];
 
 module.exports = {
@@ -32,7 +31,7 @@ module.exports = {
         }
 
         if (filteredAnime.length === 0) {
-            return message.channel.send(`❌ No anime found for genre: **${inputGenre}**. Try genres like: action, romance, comedy, supernatural.`);
+            return message.channel.send(`❌ No anime found for genre: **${inputGenre}**.`);
         }
 
         const anime = filteredAnime[Math.floor(Math.random() * filteredAnime.length)];
@@ -44,7 +43,7 @@ module.exports = {
                 { name: "💬 Comment", value: anime.comment }
             )
             .setColor("Random")
-            .setFooter({ text: "Try !anime [genre] for specific types!" });
+            .setFooter({ text: "Use !anime [genre] for another suggestion!" });
 
         message.channel.send({ embeds: [embed] });
     }
