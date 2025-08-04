@@ -204,36 +204,49 @@
                 },
             };
 
-            const userinfo = {
-                name: "userinfo",
-                description: "Display user information",
-                usage: "!userinfo [@user]",
-                async execute(message, args, client) {
-                    const targetUser = message.mentions.members.first() || message.member;
-                    const user = targetUser.user;
+const userinfo = {
+    name: "userinfo",
+    description: "Display user information",
+    usage: "!userinfo [@user]",
+    async execute(message, args, client) {
+        const targetMember = message.mentions.members.first() || message.member;
+        const user = targetMember.user;
 
-                    const embed = new EmbedBuilder()
-                        .setColor(config.colors.info)
-                        .setTitle(`👤 ${user.tag} User Info`)
-                        .setThumbnail(user.displayAvatarURL({ dynamic: true }))
-                        .addFields(
-                            { name: "Username", value: user.username, inline: true },
-                            { name: "Discriminator", value: user.discriminator, inline: true },
-                            { name: "ID", value: user.id, inline: true },
-                            { name: "Nickname", value: targetUser.nickname || "None", inline: true },
-                            { name: "Account Created", value: `<t:${Math.floor(user.createdTimestamp / 1000)}:F>`, inline: false },
-                            { name: "Joined Server", value: `<t:${Math.floor(targetUser.joinedTimestamp / 1000)}:F>`, inline: false },
-                            {
-                                name: "Roles",
-                                value: targetUser.roles.cache.map(role => role.name).join(", ") || "None",
-                                inline: false
-                            }
-                        )
-                        .setTimestamp();
-
-                    message.reply({ embeds: [embed] });
+        const embed = new EmbedBuilder()
+            .setColor(config.colors.info || "Blue")
+            .setTitle(`👤 User Info: ${user.tag}`)
+            .setThumbnail(user.displayAvatarURL({ dynamic: true }))
+            .addFields(
+                { name: "Username", value: user.username, inline: true },
+                { name: "Discriminator", value: `#${user.discriminator}`, inline: true },
+                { name: "User ID", value: user.id, inline: true },
+                { name: "Nickname", value: targetMember.nickname || "None", inline: true },
+                {
+                    name: "Account Created",
+                    value: `<t:${Math.floor(user.createdTimestamp / 1000)}:F>`,
+                    inline: false,
                 },
-            };
+                {
+                    name: "Joined Server",
+                    value: `<t:${Math.floor(targetMember.joinedTimestamp / 1000)}:F>`,
+                    inline: false,
+                },
+                {
+                    name: "Roles",
+                    value: targetMember.roles.cache
+                        .filter(role => role.id !== message.guild.id)
+                        .map(role => `<@&${role.id}>`)
+                        .join(", ") || "None",
+                    inline: false,
+                }
+            )
+            .setFooter({ text: `Requested by ${message.author.tag}`, iconURL: message.author.displayAvatarURL() })
+            .setTimestamp();
+
+        message.reply({ embeds: [embed] });
+    },
+};
+
 
             module.exports = {
                 help,
