@@ -1,0 +1,3 @@
+# This file ensures the data directory is tracked by Git
+# The data directory is used for storing JSON files like tempRoles.json and confessions.json
+# These files are created automatically by the bot when it runs
