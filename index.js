@@ -18,6 +18,15 @@ const client = new Client({
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildMembers,
     ],
+    presence: {
+        status: 'dnd', // ✅ online | idle | dnd | invisible
+        activities: [
+            {
+                name: 'Ready to help! | do !help',
+                type: ActivityType.Watching
+            }
+        ]
+    }
 });
 
 // Command collection
@@ -40,11 +49,11 @@ for (const file of commandFiles) {
 
 // When bot is ready
 client.once("ready", () => {
-    console.log(`✅ ${client.user.tag} is online!`);
+        console.log(`✅ ${client.user.tag} is online!`);
     console.log(`🔗 Connected to ${client.guilds.cache.size} servers`);
 
     initDatabase();
-    client.user.setActivity("with the cosmos | !help", { type: ActivityType.Playing });
+    client.user.setActivity("Ready to help! | do !help", { type: ActivityType.Watching });
 });
 
 // Prevent duplicate execution with cooldown
@@ -110,6 +119,7 @@ client.on("messageCreate", async (message) => {
             message.reply({ embeds: [errorEmbed] }).catch(console.error);
         }
     }
+
 });
 
 // Error handling
