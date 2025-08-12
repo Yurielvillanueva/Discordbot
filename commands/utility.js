@@ -111,6 +111,8 @@
                 description: "Submit an anonymous confession",
                 usage: "!confess <message>",
                 async execute(message, args, client) {
+                const CONFESSION_CHANNEL_ID = "1392777894798823455"; // Replace with your confession channel ID
+
                     if (args.length === 0) {
                         const embed = new EmbedBuilder()
                             .setColor(config.colors.error)
@@ -130,7 +132,7 @@
                             .setTimestamp();
                         return message.reply({ embeds: [embed] });
                     }
-
+                   
                     try {
                         await message.delete();
 
@@ -149,6 +151,13 @@
                             .setTimestamp();
 
                         message.channel.send({ embeds: [embed] });
+                       // ✅ Send to the specific confession channel instead
+                       const confessionChannel = await client.channels.fetch(CONFESSION_CHANNEL_ID).catch(() => null);
+                         if (!confessionChannel || !confessionChannel.isTextBased()) {
+                           return message.reply("❌ Confession channel not found or is not a text channel.");
+                       }
+                        await confessionChannel.send({ embeds: [embed] });
+
 
                         try {
                             const dmEmbed = new EmbedBuilder()
