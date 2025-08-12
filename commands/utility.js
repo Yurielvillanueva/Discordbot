@@ -106,76 +106,85 @@
                 },
             };
 
-            const confess = {
-                name: "confess",
-                description: "Submit an anonymous confession",
-                usage: "!confess <message>",
-                async execute(message, args, client) {
-                    if (args.length === 0) {
-                        const embed = new EmbedBuilder()
-                            .setColor(config.colors.error)
-                            .setTitle("❌ Invalid Usage")
-                            .setDescription("Usage: `!confess <message>`")
-                            .setTimestamp();
-                        return message.reply({ embeds: [embed] });
-                    }
+const confess = {
+    name: "confess",
+    description: "Submit an anonymous confession",
+    usage: "!confess <message>",
+    async execute(message, args, client) {
+        if (args.length === 0) {
+            const embed = new EmbedBuilder()
+                .setColor(config.colors.error)
+                .setTitle("❌ Invalid Usage")
+                .setDescription(`Usage: \`${config.prefix}confess <message>\``)
+                .setTimestamp();
+            return message.reply({ embeds: [embed] });
+        }
 
-                    const confession = args.join(" ");
+        const confession = args.join(" ");
 
-                    if (confession.length > 1000) {
-                        const embed = new EmbedBuilder()
-                            .setColor(config.colors.error)
-                            .setTitle("❌ Message Too Long")
-                            .setDescription("Confession must be 1000 characters or less.")
-                            .setTimestamp();
-                        return message.reply({ embeds: [embed] });
-                    }
-                   
-                    try {
-                        await message.delete();
+        if (confession.length > 1000) {
+            const embed = new EmbedBuilder()
+                .setColor(config.colors.error)
+                .setTitle("❌ Message Too Long")
+                .setDescription("Confession must be 1000 characters or less.")
+                .setTimestamp();
+            return message.reply({ embeds: [embed] });
+        }
 
-                        const confessionData = addConfession(
-                            message.guild.id,
-                            message.channel.id,
-                            confession,
-                            message.author.id
-                        );
+        try {
+            await message.delete();
 
-                        const embed = new EmbedBuilder()
-                            .setColor(config.colors.primary)
-                            .setTitle("📝 Anonymous Confession")
-                            .setDescription(confession)
-                            .setFooter({ text: `Confession #${confessionData.id}` })
-                            .setTimestamp();
+            // Save the confession in your database
+            const confessionData = addConfession(
+                message.guild.id,
+                message.channel.id,
+                confession,
+                message.author.id
+            );
 
-                        message.channel.send({ embeds: [embed] });
-                       }
-                        await confessionChannel.send({ embeds: [embed] });
-                    }
+            // Build the confession embed
+            const confessionEmbed = new EmbedBuilder()
+                .setColor(config.colors.primary)
+                .setTitle("📝 Anonymous Confession")
+                .setDescription(confession)
+                .setFooter({ text: `Confession #${confessionData?.id || "?"}` })
+                .setTimestamp();
 
-                        try {
-                            const dmEmbed = new EmbedBuilder()
-                                .setColor(config.colors.success)
-                                .setTitle("✅ Confession Submitted")
-                                .setDescription("Your anonymous confession has been posted successfully.")
-                                .setTimestamp();
+            // If you have a dedicated confession channel, fetch it
+            const confessionChannelId = config.confessionChannelId; // Add this to your config
+            const confessionChannel = confessionChannelId
+                ? message.guild.channels.cache.get(confessionChannelId)
+                : message.channel;
 
-                            await message.author.send({ embeds: [dmEmbed] });
-                        } catch (dmError) {
-                            console.log("Could not send DM confirmation to user");
-                        }
-                    } catch (error) {
-                        console.error("Error processing confession:", error);
-                        const embed = new EmbedBuilder()
-                            .setColor(config.colors.error)
-                            .setTitle("❌ Error")
-                            .setDescription("An error occurred while processing your confession.")
-                            .setTimestamp();
+            // Send the confession embed to the right channel
+            await confessionChannel.send({ embeds: [confessionEmbed] });
 
-                        message.reply({ embeds: [embed] });
-                    }
-                },
-            };
+            // Try to DM the user confirmation
+            try {
+                const dmEmbed = new EmbedBuilder()
+                    .setColor(config.colors.success)
+                    .setTitle("✅ Confession Submitted")
+                    .setDescription("Your anonymous confession has been posted successfully.")
+                    .setTimestamp();
+
+                await message.author.send({ embeds: [dmEmbed] });
+            } catch (dmError) {
+                console.log(`Could not send DM to ${message.author.tag}`);
+            }
+
+        } catch (error) {
+            console.error("Error processing confession:", error);
+            const embed = new EmbedBuilder()
+                .setColor(config.colors.error)
+                .setTitle("❌ Error")
+                .setDescription("An error occurred while processing your confession.")
+                .setTimestamp();
+
+            return message.reply({ embeds: [embed] });
+        }
+    },
+};
+
 
             const serverinfo = {
                 name: "serverinfo",
