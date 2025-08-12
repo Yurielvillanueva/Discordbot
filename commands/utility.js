@@ -151,7 +151,7 @@
                         message.channel.send({ embeds: [embed] });
                        }
                         await confessionChannel.send({ embeds: [embed] });
-
+                    }
 
                         try {
                             const dmEmbed = new EmbedBuilder()
