@@ -18,7 +18,7 @@
                                 {
                                     name: "🛡️ Moderation Commands",
                                     value: isAdmin
-                                        ? "`addrole`, `removerole`, `temprole`, `clear`, `say`, `kick`, `ban`, `mute`, `unmute`, `warn`"
+                                        ? "`addrole`, `removerole`, `temprole`, `clear`, `say`, `kick`, `ban`, `mute`, `unmute`, `warn`, `announce`"
                                         : "**Admin Only!**",
                                     inline: false,
                                 },
