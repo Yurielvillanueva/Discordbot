@@ -24,7 +24,7 @@
                                 },
                                 {
                                     name: "🎮 Fun Commands",
-                                    value: "`8ball`, `joke`, `coinflip`, `roll`, `rps`, `roast`, `catfact`, `compliment`, `fortune`, `anime`",
+                                    value: "`8ball`, `joke`, `coinflip`, `roll`, `rps`, `roast`, `catfact`, `compliment`, `fortune`",
                                     inline: false,
                                 },
                                 {
